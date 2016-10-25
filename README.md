@@ -1,5 +1,5 @@
 Ansible Role: magephp
-=========================
+========================
 
 Build status for this role: [![Build Status](https://travis-ci.org/webofmars/ansible-magephp.svg?branch=master)](https://travis-ci.org/webofmars/ansible-magephp.svg?branch=master)
 
