@@ -1,0 +1,25 @@
+- name: get magephp/magallanes archive
+  get_url: url="{{ mage_php_archive_url }}" dest="{{ magephp_dl_dir }}/{{magephp_archive_filename}}" mode=0444
+  register: magephp_gotarchive
+
+- name: create extract dir if not existing
+  file: path="{{ magephp_extract_dir }}" state="directory" mode="777"
+
+- name: extract archive to temp folder
+  unarchive: src="{{ magephp_dl_dir }}/{{magephp_archive_filename}}" dest="{{ magephp_extract_dir }}"
+  when: magephp_gotarchive is defined and magephp_gotarchive
+
+- name: install magephp from extract directory
+  command: "{{ magephp_install_cmd }}"
+  args:
+    chdir: "{{ magephp_icmd_dir }}"
+    creates: "{{ magephp_verify_path }}"
+  register: magephp_installed
+
+- name: clean the temp files | dowloaded archive
+  file: path="{{ magephp_dl_dir }}/{{magephp_archive_filename}}" state="absent"
+  when: magephp_installed is defined and magephp_installed
+
+- name: clean the temp directories | extract dir
+  file: path="{{ magephp_extract_dir }}" state="absent"
+  when: magephp_installed is defined and magephp_installed
